@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clients Data Management - ACHARYA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin_clients.css?v=1.0.1">
+    <style>
+        /* Fallback styles in case CSS doesn't load */
+        body { 
+            font-family: 'Inter', 'Poppins', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { 
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .section-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        h1, h2 { color: #ffffff; }
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        }
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+        .form-input {
+            padding: 12px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #333;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .client-info { color: #ffffff; }
+        .client-name { font-weight: 600; margin-bottom: 5px; }
+        .client-contact { opacity: 0.8; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1>👥 Clients Data Management</h1>
+                <button id="back" class="back-btn">← Back to Dashboard</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="section-card">
+                <h2>➕ Add New Client</h2>
+                <form id="addClientForm" class="add-client-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="clientName">Client Name:</label>
+                            <input type="text" id="clientName" required placeholder="Enter client name" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="clientContact">Contact:</label>
+                            <input type="text" id="clientContact" required placeholder="Enter contact information" class="form-input">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">➕ Add Client</button>
+                </form>
+            </div>
+
+            <div class="section-card">
+                <div class="card-header">
+                    <h2>📋 All Clients</h2>
+                    <div class="client-stats">
+                        <span class="stat-item">📊 Total: <span id="totalClients">0</span></span>
+                        <span class="stat-item">🔄 Active: <span id="activeClients">0</span></span>
+                    </div>
+                </div>
+                <div id="clientList" class="client-container">
+                    <div class="loading-indicator" id="loadingIndicator">
+                        <div class="spinner"></div>
+                        <p>Loading clients...</p>
+                    </div>
+                    <ul id="clientListUl" class="client-list"></ul>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="admin_clients.js"></script>
+</body>
+</html>

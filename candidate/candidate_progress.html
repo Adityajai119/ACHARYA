@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Profile - ACHARYA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="candidate_progress.css?v=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+    <script>
+        // Fallback if JWT library fails to load
+        if (typeof jwtDecode === 'undefined' && typeof jwt_decode === 'undefined') {
+            console.log('JWT library not loaded from CDN, will use fallback decoder');
+        }
+    </script>
+    <style>
+        /* Fallback styles in case external CSS fails to load */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            text-align: center;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        #back {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(239, 68, 68, 0.8);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 30px auto 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .add-section, .list-section {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        .add-card, .list-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .form-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .progress-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+        
+        .progress-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .progress-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.5;
+        }
+        
+        .progress-date {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            margin-top: 8px;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .delete-btn {
+            background: rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+        
+        .delete-btn:hover {
+            background: rgba(239, 68, 68, 0.5);
+            transform: scale(1.05);
+        }
+        
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #ffffff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .success-animation {
+            animation: successPulse 0.6s ease;
+        }
+        
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .progress-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .progress-title {
+            font-weight: 600;
+            color: #22c55e;
+            margin-bottom: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+        }
+        
+        .progress-description {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .no-progress {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-style: italic;
+            padding: 40px 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+        }
+        
+        .progress-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #22c55e;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Progress Profile</h1>
+    <button id="back">← Back to Dashboard</button>
+    
+    <div class="content-wrapper">
+        <div class="add-section">
+            <div class="add-card">
+                <h2>📈 Add Progress</h2>
+                <p class="form-description">Track your achievements and milestones to build a comprehensive progress profile. Add completed projects, certifications, skills learned, and other accomplishments.</p>
+                
+                <div class="progress-info">
+                    <div class="progress-title">📋 Progress Tracking</div>
+                    <div class="progress-description">
+                        Document your learning journey and professional growth. Add completed projects, certifications, new skills, and achievements to showcase your continuous development.
+                    </div>
+                </div>
+                
+                <form id="progressForm">
+                    <div class="form-group">
+                        <label for="progressItem">🎯 Progress Item</label>
+                        <input type="text" id="progressItem" placeholder="e.g., Completed React.js project, Earned AWS certification, Learned Python programming" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="progressCategory">📂 Category</label>
+                        <input type="text" id="progressCategory" placeholder="e.g., Project, Certification, Skill, Achievement, Course" required>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">🚀 Add Progress</span>
+                        <div class="loading-spinner" style="display: none;"></div>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="list-section">
+            <div class="list-card">
+                <h2>📊 Progress Overview</h2>
+                <p class="form-description">Review your progress statistics and track your achievements over time.</p>
+                
+                <div class="progress-stats" id="progressStats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalItems">0</div>
+                        <div class="stat-label">Total Items</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="thisMonth">0</div>
+                        <div class="stat-label">This Month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="thisWeek">0</div>
+                        <div class="stat-label">This Week</div>
+                    </div>
+                </div>
+                
+                <h3>📝 Your Progress Items</h3>
+                <div id="progressList">
+                    <div class="no-progress" id="noProgress">
+                        No progress items yet. Add your first achievement above!
+                    </div>
+                    <ul id="progressListUl"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="candidate_progress.js"></script>
+</body>
+</html>

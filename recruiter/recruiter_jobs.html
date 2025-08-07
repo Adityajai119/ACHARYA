@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Postings - ACHARYA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="recruiter_jobs.css?v=1.0">
+    <style>
+        /* Fallback styles in case external CSS fails to load */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            text-align: center;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        #back {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(239, 68, 68, 0.8);
+            color: #ffffff;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        #back:hover {
+            background: rgba(239, 68, 68, 1);
+            transform: translateY(-2px);
+        }
+        
+        .section-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .section-card h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            color: #ffffff;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        
+        input[type="text"], input[type="number"], textarea, select {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        input[type="text"]:focus, input[type="number"]:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+        
+        button[type="submit"] {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .job-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .job-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .job-item button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+        
+        .job-item button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .job-item button.delete-btn {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+        
+        .job-item button.delete-btn:hover {
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .section-card {
+                padding: 20px;
+            }
+            
+            #back {
+                top: 20px;
+                left: 20px;
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💼 Job Postings</h1>
+        <button id="back">← Back to Dashboard</button>
+        
+        <div class="section-card">
+            <h2>📝 Post New Job</h2>
+            <button id="testAPI" style="margin-bottom: 20px; padding: 8px 16px; border: none; border-radius: 8px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; font-family: 'Inter', sans-serif; font-weight: 500; cursor: pointer; transition: all 0.3s ease; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+                🔧 Test API Connection
+            </button>
+            <form id="postJobForm">
+                <div class="form-group">
+                    <label for="jobTitle">🏢 Job Title:</label>
+                    <input type="text" id="jobTitle" required placeholder="Enter job title">
+                </div>
+                
+                <div class="form-group">
+                    <label for="jobCompany">🏢 Company:</label>
+                    <input type="text" id="jobCompany" required placeholder="Enter company name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="jobLocation">📍 Location:</label>
+                    <input type="text" id="jobLocation" required placeholder="Enter job location">
+                </div>
+                
+                <div class="form-group">
+                    <label for="jobDescription">📄 Job Description:</label>
+                    <textarea id="jobDescription" rows="4" placeholder="Enter detailed job description..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="jobSalary">💰 Salary Range:</label>
+                    <input type="text" id="jobSalary" placeholder="e.g., $50,000 - $70,000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="jobType">📋 Job Type:</label>
+                    <select id="jobType">
+                        <option value="Full-time">⏰ Full-time</option>
+                        <option value="Part-time">⏱️ Part-time</option>
+                        <option value="Contract">📋 Contract</option>
+                        <option value="Internship">🎓 Internship</option>
+                        <option value="Remote">🏠 Remote</option>
+                    </select>
+                </div>
+                
+                <button type="submit">🚀 Post Job</button>
+            </form>
+        </div>
+        
+        <div class="section-card">
+            <h2>📋 Posted Jobs</h2>
+            <div id="jobList">
+                <ul></ul>
+            </div>
+        </div>
+    </div>
+    
+    <script src="recruiter_jobs.js?v=2.0"></script>
+</body>
+</html>

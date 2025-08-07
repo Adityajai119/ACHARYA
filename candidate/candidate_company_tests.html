@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company-Based Tests - ACHARYA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="candidate_company_tests.css?v=1.0"><script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+    <style>
+        /* Fallback styles in case external CSS fails to load */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            text-align: center;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        #back {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(239, 68, 68, 0.8);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 30px auto 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .test-section, .result-section {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        .test-card, .result-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .form-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .result-content {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+        
+        .result-excellent {
+            border-color: rgba(34, 197, 94, 0.5);
+            background: rgba(34, 197, 94, 0.1);
+        }
+        
+        .result-good {
+            border-color: rgba(59, 130, 246, 0.5);
+            background: rgba(59, 130, 246, 0.1);
+        }
+        
+        .result-needs-improvement {
+            border-color: rgba(245, 158, 11, 0.5);
+            background: rgba(245, 158, 11, 0.1);
+        }
+        
+        .result-poor {
+            border-color: rgba(239, 68, 68, 0.5);
+            background: rgba(239, 68, 68, 0.1);
+        }
+        
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #ffffff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .success-animation {
+            animation: successPulse 0.6s ease;
+        }
+        
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .company-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .company-title {
+            font-weight: 600;
+            color: #22c55e;
+            margin-bottom: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+        }
+        
+        .company-description {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .score-display {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin: 10px 0;
+        }
+        
+        .score-excellent {
+            background: rgba(34, 197, 94, 0.3);
+            color: #22c55e;
+        }
+        
+        .score-good {
+            background: rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+        }
+        
+        .score-needs-improvement {
+            background: rgba(245, 158, 11, 0.3);
+            color: #f59e0b;
+        }
+        
+        .score-poor {
+            background: rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <h1>Company-Based Tests</h1>
+    <button id="back">← Back to Dashboard</button>
+    
+    <div class="content-wrapper">
+        <div class="assigned-tests-section">
+            <div class="test-card">
+                <h2>📋 Assigned Company Tests</h2>
+                <p class="form-description">Take company tests assigned by recruiters. Complete these assessments to demonstrate your skills to potential employers.</p>
+                
+                <div id="assignedTestsContainer">
+                    <div class="loading-indicator" id="loadingAssignedTests">
+                        <div class="spinner"></div>
+                        <p>Loading assigned tests...</p>
+                    </div>
+                    <div id="assignedTestsList"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-card">
+                <h2>🏢 Company Test Submission</h2>
+                <p class="form-description">Submit your company-based test results to track your performance across different organizations. This helps you monitor your progress and identify areas for improvement.</p>
+                
+                <div class="company-info">
+                    <div class="company-title">📋 Test Information</div>
+                    <div class="company-description">
+                        Track your performance in company-specific assessments. Submit your test results to monitor your progress and receive personalized feedback based on your score.
+                    </div>
+                </div>
+                
+                <form id="companyTestForm">
+                    <div class="form-group">
+                        <label for="companyName">🏢 Company Name</label>
+                        <input type="text" id="companyName" placeholder="e.g., Google, Microsoft, Amazon, Apple, Meta" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="testScore">📊 Test Score (out of 100)</label>
+                        <input type="number" id="testScore" min="0" max="100" placeholder="Enter your score (0-100)" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="testType">📝 Test Type</label>
+                        <input type="text" id="testType" placeholder="e.g., Technical Assessment, Aptitude Test, Coding Challenge, Behavioral Interview" required>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">🚀 Submit Test Result</span>
+                        <div class="loading-spinner" style="display: none;"></div>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="result-section">
+            <div class="result-card" id="testResult" style="display: none;">
+                <h2>📈 Test Result Analysis</h2>
+                <p class="form-description">Review your test performance and receive personalized feedback to improve your future assessments.</p>
+                
+                <div class="result-content" id="resultText">
+                    Your test result analysis will appear here...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="candidate_company_tests.js"></script>
+</body>
+</html>

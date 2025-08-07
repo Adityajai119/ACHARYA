@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenSource Contribution - ACHARYA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="candidate_internship.css?v=1.0"><script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+    <script src="candidate_internship.js"></script>
+    <style>
+        /* Fallback styles in case external CSS fails to load */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            text-align: center;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        #back {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(239, 68, 68, 0.8);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 30px auto 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .project-section, .list-section {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        .project-card, .list-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .form-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        input::placeholder, textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #ffffff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .success-animation {
+            animation: successPulse 0.6s ease;
+        }
+        
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .project-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .project-title {
+            font-weight: 600;
+            color: #22c55e;
+            margin-bottom: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+        }
+        
+        .project-description {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .no-projects {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-style: italic;
+            padding: 40px 20px;
+        }
+        
+        .project-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .project-name {
+            font-weight: 600;
+            color: #ffffff;
+            font-size: 1.2rem;
+        }
+        
+        .project-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .status-open {
+            background: rgba(34, 197, 94, 0.3);
+            color: #22c55e;
+        }
+        
+        .status-in-progress {
+            background: rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+        }
+        
+        .project-details {
+            margin-bottom: 15px;
+        }
+        
+        .project-details p {
+            margin: 5px 0;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .project-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: rgba(102, 126, 234, 0.8);
+            color: white;
+        }
+        
+        .btn-success {
+            background: rgba(34, 197, 94, 0.8);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .contact-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .contact-content {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .contact-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .contact-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        
+        .close-btn {
+            background: rgba(239, 68, 68, 0.8);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .contact-info {
+            margin-bottom: 20px;
+        }
+        
+        .contact-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .contact-label {
+            font-weight: 600;
+            color: #22c55e;
+            margin-bottom: 5px;
+        }
+        
+        .contact-value {
+            color: rgba(255, 255, 255, 0.9);
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <button id="back" class="back-btn">← Back to Dashboard</button>
+        
+        <h1>🚀 OpenSource Contribution</h1>
+        
+        <div class="project-section">
+            <div class="project-card">
+                <h2>🚀 Share Your OpenSource Project</h2>
+                <p class="form-description">Post your open source project ideas and connect with other developers who want to contribute. Build amazing projects together!</p>
+                
+                <div class="project-info">
+                    <div class="project-title">📋 Project Information</div>
+                    <div class="project-description">
+                        Share your project idea, describe what you're building, and specify the skills needed. Other developers can discover your project and join your team!
+                    </div>
+                </div>
+                
+                <form id="projectForm">
+                    <div class="form-group">
+                        <label for="projectName">🎯 Project Name</label>
+                        <input type="text" id="projectName" placeholder="e.g., AI Chat Assistant, Blockchain Wallet, Mobile Game" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projectDescription">📝 Project Description</label>
+                        <textarea id="projectDescription" placeholder="Describe your project idea, goals, and what you're trying to achieve..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="technologies">🛠️ Technologies Needed</label>
+                        <input type="text" id="technologies" placeholder="e.g., React, Node.js, Python, Machine Learning, Blockchain" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contributorsNeeded">👥 Contributors Needed</label>
+                        <select id="contributorsNeeded" required>
+                            <option value="">Select number of contributors</option>
+                            <option value="1-2">1-2 contributors</option>
+                            <option value="3-5">3-5 contributors</option>
+                            <option value="5-10">5-10 contributors</option>
+                            <option value="10+">10+ contributors</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projectStatus">📊 Project Status</label>
+                        <select id="projectStatus" required>
+                            <option value="Planning">Planning Phase</option>
+                            <option value="Development">In Development</option>
+                            <option value="Testing">Testing Phase</option>
+                            <option value="Deployment">Ready for Deployment</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contactEmail">📧 Contact Email</label>
+                        <input type="email" id="contactEmail" placeholder="your.email@example.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contactPhone">📱 Contact Phone (Optional)</label>
+                        <input type="tel" id="contactPhone" placeholder="+1 234 567 8900">
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">🚀 Post Project</span>
+                        <div class="loading-spinner" style="display: none;"></div>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="list-section">
+            <div class="list-card">
+                <h2>🔍 Discover OpenSource Projects</h2>
+                <p class="form-description">Browse projects shared by other developers and find opportunities to contribute to exciting open source initiatives.</p>
+                
+                <div style="margin-bottom: 20px;">
+                    <button onclick="loadProjects()" style="background: rgba(102, 126, 234, 0.8); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; margin-right: 10px;">
+                        🔄 Refresh Projects
+                    </button>
+                    <button onclick="console.log('Current projects:', projects); console.log('localStorage:', localStorage.getItem('opensource_projects'));" style="background: rgba(245, 158, 11, 0.8); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">
+                        🐛 Debug Info
+                    </button>
+                </div>
+                
+                <div id="projectList">
+                    <div class="no-projects" id="noProjects">
+                        No open source projects shared yet. Be the first to post a project!
+                    </div>
+                    <div id="projectListContainer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div id="contactModal" class="contact-modal" style="display: none;">
+        <div class="contact-content">
+            <div class="contact-header">
+                <h3 class="contact-title">📞 Contact Information</h3>
+                <button class="close-btn" onclick="closeContactModal()">✕</button>
+            </div>
+            <div id="contactInfo" class="contact-info">
+                <!-- Contact details will be populated here -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACHARYA - Career Forging Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+    <style>
+        /* Loading Screen Styles */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #000000, #1a1a1a);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.6s;
+        }
+
+        #acharya-wrapper {
+            position: relative;
+        }
+
+        #acharya-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
+            display: flex;
+            gap: 5px;
+            position: relative;
+        }
+
+        .letter {
+            color: #fff;
+            -webkit-text-stroke: 2px #87ceeb;
+            text-shadow: 
+                0 0 5px #87ceeb,
+                0 0 10px #87ceeb;
+            position: relative;
+            opacity: 0;
+            animation: type 0.5s forwards;
+            display: inline-block;
+            transform: translate(0, 0) !important;
+            z-index: 1;
+        }
+
+        .letter:nth-child(1) { animation-delay: 0s; }
+        .letter:nth-child(2) { animation-delay: 0.2s; }
+        .letter:nth-child(3) { animation-delay: 0.4s; }
+        .letter:nth-child(4) { animation-delay: 0.6s; }
+        .letter:nth-child(5) { animation-delay: 0.8s; }
+        .letter:nth-child(6) { animation-delay: 1s; }
+        .letter:nth-child(7) { animation-delay: 1.2s; }
+
+        @keyframes type {
+            0% { opacity: 0; transform: translateY(20px);}
+            100% { opacity: 1; transform: translateY(0);}
+        }
+
+        /* Glowing reflection below the letters */
+        .letter::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 100%;
+            left: 0;
+            color: transparent;
+            -webkit-text-stroke: 2px #87ceeb;
+            filter: 
+                drop-shadow(0px 0px 4px #87ceeb)
+                blur(4px);
+            opacity: 0;
+            z-index: 2;
+            transform: scaleY(-1);
+            mask-image: linear-gradient(to bottom, white, rgba(0, 0, 0, 0.5));
+            -webkit-mask-image: linear-gradient(to bottom, white, rgba(0, 0, 0, 0.5));
+            clip-path: inset(0 0 100% 0);
+            animation: wipeShadow 0.5s ease-in-out forwards;
+        }
+
+        @keyframes wipeShadow {
+            0% {
+                opacity: 0;
+                clip-path: inset(0 0 100% 0);
+            }
+            10% {
+                opacity: 0.5;
+            }
+            100% {
+                opacity: 0.5;
+                clip-path: inset(0 0 0 0);
+            }
+        }
+
+
+
+        .loading-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 80px;
+        }
+
+        .loading-bar {
+            width: 300px;
+            height: 10px;
+            background: #000;
+            border: 2px solid #00ff00;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .loading-progress {
+            width: 0;
+            height: 100%;
+            background: #00ff00;
+            border-radius: 3px;
+            transition: width 0.1s linear;
+        }
+
+        #loading-percentage {
+            color: #00ff00;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Main content styles */
+        .main-content {
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+        }
+
+        .main-content.show {
+            opacity: 1;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            #acharya-text {
+                font-size: 3rem;
+            }
+            
+            .loading-bar {
+                width: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #acharya-text {
+                font-size: 2.5rem;
+            }
+            
+            .loading-bar {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div id="acharya-wrapper">
+            <h1 id="acharya-text">
+                <span class="letter">A</span>
+                <span class="letter">C</span>
+                <span class="letter">H</span>
+                <span class="letter">A</span>
+                <span class="letter">R</span>
+                <span class="letter">Y</span>
+                <span class="letter">A</span>
+            </h1>
+        </div>
+        <div class="loading-container">
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+            <span id="loading-percentage">0%</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <div class="container">
+            <h1>ACHARYA</h1>
+            <p class="subtitle">Career Forging Platform</p>
+            
+            <div class="auth-tabs">
+                <button class="tab-button active" onclick="switchTab('login')">Login</button>
+                <button class="tab-button" onclick="switchTab('register')">Register</button>
+            </div>
+
+            <div id="alert-container"></div>
+
+            <!-- Login Form -->
+            <div id="login-form" class="form-container active">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginUsername">Username</label>
+                        <input type="text" id="loginUsername" placeholder="Enter your username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn" id="loginBtn">
+                        <span class="btn-text">Login</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-form" class="form-container">
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="registerUsername">Username</label>
+                        <input type="text" id="registerUsername" placeholder="Choose a username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" placeholder="Create a password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerRole">Role</label>
+                        <select id="registerRole" required>
+                            <option value="">Select your role</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Recruiter">Recruiter</option>
+                            <option value="Candidate">Candidate</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn" id="registerBtn">
+                        <span class="btn-text">Register</span>
+                    </button>
+                </form>
+            </div>
+
+            <div class="footer">
+                <p>&copy; 2024 ACHARYA. Empowering careers through technology.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Set data-text attribute for reflection effect
+            document.querySelectorAll(".letter").forEach(letter => {
+                letter.setAttribute("data-text", letter.textContent);
+            });
+
+            // Loading animation
+            const loadingScreen = document.getElementById("loading-screen");
+            const mainContent = document.getElementById("mainContent");
+            const loadingBar = document.querySelector(".loading-bar");
+            const loadingPercentage = document.getElementById("loading-percentage");
+            let progress = 0;
+
+            const updateProgress = () => {
+                progress += 1;
+                loadingPercentage.textContent = `${progress}%`;
+                
+                // Update progress bar width manually
+                const progressBar = document.querySelector('.loading-progress');
+                if (progressBar) {
+                    progressBar.style.width = `${progress}%`;
+                }
+                
+                if (progress < 100) {
+                    setTimeout(updateProgress, 30);
+                } else {
+                    loadingPercentage.textContent = "100%";
+                    if (progressBar) {
+                        progressBar.style.width = "100%";
+                    }
+                    
+                    // After loading completes, transition to main content
+                    setTimeout(() => {
+                        loadingScreen.style.opacity = "0";
+                        setTimeout(() => {
+                            loadingScreen.style.display = "none";
+                            mainContent.classList.add("show");
+                        }, 600);
+                    }, 500);
+                    
+                    console.log("Loading complete!");
+                }
+            };
+
+            // Start loading animation
+            updateProgress();
+        });
+    </script>
+</body>
+</html>

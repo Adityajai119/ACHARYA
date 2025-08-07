@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Simulation with HR</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            border: 1px solid #e1e8ed;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .start-screen {
+            text-align: center;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3em;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(5, 150, 105, 0.3);
+            font-weight: 600;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
+            background: linear-gradient(135deg, #047857 0%, #059669 100%);
+        }
+
+        .question-screen {
+            display: none;
+        }
+
+        .progress-bar {
+            background: #f1f5f9;
+            height: 6px;
+            border-radius: 3px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #1e40af, #3b82f6);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .question-counter {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 20px;
+            font-weight: 500;
+            font-size: 1.1em;
+        }
+
+        .question-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #1e40af;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-text {
+            font-size: 1.3em;
+            color: #1e293b;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .answer-input {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-family: inherit;
+            resize: vertical;
+            transition: all 0.3s ease;
+            background: #ffffff;
+            color: #374151;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: #1e40af;
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        .next-btn, .submit-btn {
+            background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(30, 64, 175, 0.3);
+            font-weight: 500;
+        }
+
+        .next-btn:hover, .submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.4);
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+        }
+
+        .results-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .score-display {
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 16px rgba(220, 38, 38, 0.2);
+        }
+
+        .score-display h2 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .selection-status {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .selection-status h3 {
+            font-size: 1.8em;
+            margin-bottom: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .selection-status p {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .feedback-section {
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: left;
+            border: 1px solid #e2e8f0;
+        }
+
+        .feedback-section h3 {
+            color: #1e293b;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .feedback-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feedback-list li {
+            background: white;
+            padding: 12px 18px;
+            margin-bottom: 8px;
+            border-left: 3px solid #1e40af;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            color: #374151;
+            border: 1px solid #f1f5f9;
+        }
+
+        .restart-btn {
+            background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.3);
+            font-weight: 600;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
+            background: linear-gradient(135deg, #6d28d9 0%, #7c3aed 100%);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #64748b;
+        }
+
+        .spinner {
+            border: 3px solid #f1f5f9;
+            border-top: 3px solid #1e40af;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button id="back" style="position: absolute; top: 30px; right: 30px; padding: 12px 24px; border: none; border-radius: 10px; background: rgba(239, 68, 68, 0.8); color: #ffffff; font-weight: 500; cursor: pointer; transition: all 0.3s ease; z-index: 1000;">← Back to Dashboard</button>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Interview Simulation with HR</h1>
+            <p>Practice common HR interview questions with AI-powered feedback</p>
+        </div>
+
+        <div class="content">
+            <!-- Start Screen -->
+            <div class="start-screen" id="startScreen">
+                <h2>Welcome to HR Interview Practice</h2>
+                <p>This simulation will present you with 5 random questions from our database of 100+ common HR interview questions. Answer each question thoughtfully, and receive personalized feedback at the end.</p>
+                <br>
+                <button class="start-btn" onclick="startTest()">Start Interview Simulation</button>
+            </div>
+
+            <!-- Question Screen -->
+            <div class="question-screen" id="questionScreen">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="question-counter" id="questionCounter">Question 1 of 5</div>
+                
+                <div class="question-card">
+                    <div class="question-text" id="questionText"></div>
+                    <textarea class="answer-input" id="answerInput" placeholder="Type your answer here..."></textarea>
+                </div>
+
+                <div class="btn-container">
+                    <div></div>
+                    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+                </div>
+            </div>
+
+            <!-- Loading Screen -->
+            <div class="loading" id="loadingScreen">
+                <div class="spinner"></div>
+                <p>Analyzing your answers and generating feedback...</p>
+            </div>
+
+            <!-- Results Screen -->
+            <div class="results-screen" id="resultsScreen">
+                <div class="score-display" id="scoreDisplay">
+                    <h2 id="overallScore">0/5</h2>
+                    <p>Questions Answered Satisfactorily</p>
+                    <div class="selection-status" id="selectionStatus">
+                        <h3 id="selectionText">Result Pending</h3>
+                        <p id="selectionMessage">Evaluating your performance...</p>
+                    </div>
+                </div>
+
+                <div class="feedback-section">
+                    <h3>Your Capabilities</h3>
+                    <ul class="feedback-list" id="strengthsList"></ul>
+                </div>
+
+                <div class="feedback-section">
+                    <h3>Areas for Improvement</h3>
+                    <ul class="feedback-list" id="improvementsList"></ul>
+                </div>
+
+                <button class="restart-btn" onclick="restartTest()">Take Another Test</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = 'AIzaSyBDIzRw9eaTmfFkihHNRfLG7LkPTz6h4Vs';
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
+
+        const hrQuestions = [
+            "Tell me about yourself.",
+            "Why do you want to work for this company?",
+            "What are your strengths and weaknesses?",
+            "Where do you see yourself in 5 years?",
+            "Why are you leaving your current job?",
+            "What motivates you?",
+            "Describe a challenging situation you faced at work and how you handled it.",
+            "What are your salary expectations?",
+            "How do you handle stress and pressure?",
+            "What makes you a good fit for this role?",
+            "Describe your ideal work environment.",
+            "How do you prioritize your work?",
+            "Tell me about a time you failed and how you dealt with it.",
+            "What are your career goals?",
+            "How do you handle criticism?",
+            "Describe a time when you had to work with a difficult colleague.",
+            "What interests you about this industry?",
+            "How do you stay updated with industry trends?",
+            "What's your management style?",
+            "Describe a time when you showed leadership.",
+            "How do you handle multiple deadlines?",
+            "What's your approach to teamwork?",
+            "Tell me about a time you disagreed with your manager.",
+            "How do you handle change in the workplace?",
+            "What's your biggest professional achievement?",
+            "Describe a time when you had to learn something new quickly.",
+            "How do you deal with ambiguity?",
+            "What's your approach to problem-solving?",
+            "Tell me about a time you exceeded expectations.",
+            "How do you build relationships with colleagues?",
+            "What's your communication style?",
+            "Describe a time when you had to make a difficult decision.",
+            "How do you handle feedback?",
+            "What's your work-life balance philosophy?",
+            "Tell me about a time you improved a process.",
+            "How do you stay motivated during repetitive tasks?",
+            "Describe your customer service approach.",
+            "What's your approach to continuous learning?",
+            "How do you handle ethical dilemmas?",
+            "Tell me about a time you mentored someone.",
+            "What's your approach to time management?",
+            "Describe a time when you had to adapt to change.",
+            "How do you handle competing priorities?",
+            "What's your approach to giving presentations?",
+            "Tell me about a time you worked under tight deadlines.",
+            "How do you handle rejection or failure?",
+            "What's your approach to innovation?",
+            "Describe a time when you had to convince someone.",
+            "How do you stay organized?",
+            "What's your approach to networking?",
+            "Tell me about a time you resolved a conflict.",
+            "How do you approach risk-taking?",
+            "What's your leadership philosophy?",
+            "Describe a time when you had to work independently.",
+            "How do you handle confidential information?",
+            "What's your approach to quality control?",
+            "Tell me about a time you received constructive criticism.",
+            "How do you handle tight budgets?",
+            "What's your approach to delegation?",
+            "Describe a time when you had to multitask.",
+            "How do you measure success?",
+            "What's your approach to client relations?",
+            "Tell me about a time you took initiative.",
+            "How do you handle cultural differences in the workplace?",
+            "What's your approach to project management?",
+            "Describe a time when you had to be creative.",
+            "How do you handle performance reviews?",
+            "What's your approach to training others?",
+            "Tell me about a time you made a mistake.",
+            "How do you handle data and analytics?",
+            "What's your approach to remote work?",
+            "Describe a time when you had to negotiate.",
+            "How do you handle workplace diversity?",
+            "What's your approach to goal setting?",
+            "Tell me about a time you exceeded your comfort zone.",
+            "How do you handle technology changes?",
+            "What's your approach to vendor management?",
+            "Describe a time when you had to be diplomatic.",
+            "How do you handle confidentiality?",
+            "What's your approach to customer complaints?",
+            "Tell me about a time you collaborated across departments.",
+            "How do you handle budget constraints?",
+            "What's your approach to process improvement?",
+            "Describe a time when you had to be persuasive.",
+            "How do you handle interruptions?",
+            "What's your approach to quality assurance?",
+            "Tell me about a time you had to research something.",
+            "How do you handle long-term projects?",
+            "What's your approach to stakeholder management?",
+            "Describe a time when you had to be flexible.",
+            "How do you handle sensitive situations?",
+            "What's your approach to performance metrics?",
+            "Tell me about a time you implemented a solution.",
+            "How do you handle cross-functional teams?",
+            "What's your approach to knowledge sharing?",
+            "Describe a time when you had to be resourceful.",
+            "How do you handle competing demands?",
+            "What's your approach to continuous improvement?",
+            "Tell me about a time you influenced others.",
+            "How do you handle crisis situations?",
+            "What's your approach to relationship building?",
+            "Describe a time when you had to be analytical.",
+            "How do you handle routine tasks?"
+        ];
+
+        let currentQuestionIndex = 0;
+        let selectedQuestions = [];
+        let usedQuestions = new Set();
+        let userAnswers = [];
+        let testResults = {};
+
+        function getRandomQuestions() {
+            const availableQuestions = hrQuestions.filter((_, index) => !usedQuestions.has(index));
+            
+            if (availableQuestions.length < 5) {
+                usedQuestions.clear();
+            }
+            
+            const shuffled = [...Array(hrQuestions.length).keys()]
+                .filter(i => !usedQuestions.has(i))
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 5);
+            
+            shuffled.forEach(index => usedQuestions.add(index));
+            return shuffled.map(index => hrQuestions[index]);
+        }
+
+        function startTest() {
+            selectedQuestions = getRandomQuestions();
+            userAnswers = [];
+            currentQuestionIndex = 0;
+            
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('questionScreen').style.display = 'block';
+            
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const questionText = document.getElementById('questionText');
+            const answerInput = document.getElementById('answerInput');
+            const questionCounter = document.getElementById('questionCounter');
+            const progressFill = document.getElementById('progressFill');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            questionText.textContent = selectedQuestions[currentQuestionIndex];
+            answerInput.value = '';
+            questionCounter.textContent = `Question ${currentQuestionIndex + 1} of 5`;
+            progressFill.style.width = `${((currentQuestionIndex + 1) / 5) * 100}%`;
+            
+            if (currentQuestionIndex === 4) {
+                nextBtn.textContent = 'Submit Test';
+                nextBtn.onclick = submitTest;
+            } else {
+                nextBtn.textContent = 'Next Question';
+                nextBtn.onclick = nextQuestion;
+            }
+            
+            answerInput.focus();
+        }
+
+        function nextQuestion() {
+            const answerInput = document.getElementById('answerInput');
+            const answer = answerInput.value.trim();
+            
+            if (answer === '') {
+                alert('Please provide an answer before proceeding.');
+                return;
+            }
+            
+            userAnswers.push({
+                question: selectedQuestions[currentQuestionIndex],
+                answer: answer
+            });
+            
+            currentQuestionIndex++;
+            showQuestion();
+        }
+
+        async function submitTest() {
+            const answerInput = document.getElementById('answerInput');
+            const answer = answerInput.value.trim();
+            
+            if (answer === '') {
+                alert('Please provide an answer before submitting.');
+                return;
+            }
+            
+            userAnswers.push({
+                question: selectedQuestions[currentQuestionIndex],
+                answer: answer
+            });
+            
+            document.getElementById('questionScreen').style.display = 'none';
+            document.getElementById('loadingScreen').style.display = 'block';
+            
+            try {
+                await evaluateAnswers();
+                showResults();
+            } catch (error) {
+                console.error('Error evaluating answers:', error);
+                // Fallback to basic evaluation
+                basicEvaluation();
+                showResults();
+            }
+        }
+
+        async function evaluateAnswers() {
+            const evaluationPrompts = userAnswers.map((qa, index) => {
+                return {
+                    question: qa.question,
+                    answer: qa.answer,
+                    prompt: `Evaluate this HR interview answer on a scale of 1-10 and provide specific feedback:
+
+Question: "${qa.question}"
+Answer: "${qa.answer}"
+
+Please provide your evaluation in this exact JSON format:
+{
+  "score": [1-10 number],
+  "strengths": ["strength1", "strength2"],
+  "improvements": ["improvement1", "improvement2"],
+  "relevance": [1-10 number]
+}
+
+Consider: relevance to question, professionalism, depth of response, specific examples, and overall quality.`
+                };
+            });
+
+            const evaluations = [];
+            
+            for (let i = 0; i < evaluationPrompts.length; i++) {
+                try {
+                    const response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{
+                                    text: evaluationPrompts[i].prompt
+                                }]
+                            }]
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    const content = data.candidates[0].content.parts[0].text;
+                    
+                    try {
+                        const jsonMatch = content.match(/\{[\s\S]*\}/);
+                        if (jsonMatch) {
+                            const evaluation = JSON.parse(jsonMatch[0]);
+                            evaluations.push(evaluation);
+                        } else {
+                            throw new Error('No JSON found in response');
+                        }
+                    } catch (parseError) {
+                        console.error('Error parsing JSON:', parseError);
+                        evaluations.push(generateFallbackEvaluation(evaluationPrompts[i]));
+                    }
+                } catch (error) {
+                    console.error(`Error evaluating answer ${i + 1}:`, error);
+                    evaluations.push(generateFallbackEvaluation(evaluationPrompts[i]));
+                }
+                
+                // Add small delay between API calls
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+
+            testResults = processEvaluations(evaluations);
+        }
+
+        function generateFallbackEvaluation(prompt) {
+            const answer = prompt.answer.toLowerCase();
+            const question = prompt.question.toLowerCase();
+            
+            let score = 5; // Default middle score
+            let strengths = [];
+            let improvements = [];
+            
+            // Basic keyword analysis
+            if (answer.length > 100) {
+                strengths.push("Provided a detailed response");
+                score += 1;
+            } else {
+                improvements.push("Provide more detailed examples and explanations");
+            }
+            
+            if (answer.includes('example') || answer.includes('experience') || answer.includes('time when')) {
+                strengths.push("Included relevant examples");
+                score += 1;
+            } else {
+                improvements.push("Include specific examples from your experience");
+            }
+            
+            if (answer.includes('company') && question.includes('company')) {
+                strengths.push("Addressed company-specific aspects");
+                score += 1;
+            }
+            
+            // Ensure we have at least some feedback
+            if (strengths.length === 0) {
+                strengths.push("Attempted to answer the question");
+            }
+            
+            if (improvements.length === 0) {
+                improvements.push("Consider adding more specific details");
+            }
+            
+            return {
+                score: Math.min(10, Math.max(1, score)),
+                strengths: strengths,
+                improvements: improvements,
+                relevance: Math.min(10, Math.max(1, score))
+            };
+        }
+
+        function basicEvaluation() {
+            const evaluations = userAnswers.map(qa => generateFallbackEvaluation(qa));
+            testResults = processEvaluations(evaluations);
+        }
+
+        function processEvaluations(evaluations) {
+            const totalScore = evaluations.reduce((sum, eval) => sum + eval.score, 0);
+            const averageScore = totalScore / evaluations.length;
+            const satisfactoryCount = evaluations.filter(eval => eval.score >= 6).length;
+            
+            const allStrengths = evaluations.flatMap(eval => eval.strengths);
+            const allImprovements = evaluations.flatMap(eval => eval.improvements);
+            
+            // Remove duplicates and get top items
+            const uniqueStrengths = [...new Set(allStrengths)].slice(0, 5);
+            const uniqueImprovements = [...new Set(allImprovements)].slice(0, 5);
+            
+            return {
+                totalScore: satisfactoryCount,
+                averageScore: averageScore,
+                strengths: uniqueStrengths,
+                improvements: uniqueImprovements,
+                individualScores: evaluations
+            };
+        }
+
+        function showResults() {
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('resultsScreen').style.display = 'block';
+            
+            const overallScore = document.getElementById('overallScore');
+            const strengthsList = document.getElementById('strengthsList');
+            const improvementsList = document.getElementById('improvementsList');
+            const selectionStatus = document.getElementById('selectionStatus');
+            const selectionText = document.getElementById('selectionText');
+            const selectionMessage = document.getElementById('selectionMessage');
+            
+            overallScore.textContent = `${testResults.totalScore}/5`;
+            
+            // Determine selection status
+            const isSelected = testResults.totalScore >= 3;
+            
+            if (isSelected) {
+                selectionText.textContent = "SELECTED ✓";
+                selectionText.style.color = "#ffffff";
+                selectionMessage.textContent = "Congratulations! You have successfully passed the HR interview round.";
+            } else {
+                selectionText.textContent = "NOT SELECTED ✗";
+                selectionText.style.color = "#ffffff";
+                selectionMessage.textContent = "Unfortunately, you did not meet the minimum requirements. Please improve and try again.";
+            }
+            
+            // Populate strengths
+            strengthsList.innerHTML = '';
+            testResults.strengths.forEach(strength => {
+                const li = document.createElement('li');
+                li.textContent = strength;
+                strengthsList.appendChild(li);
+            });
+            
+            // Populate improvements
+            improvementsList.innerHTML = '';
+            testResults.improvements.forEach(improvement => {
+                const li = document.createElement('li');
+                li.textContent = improvement;
+                improvementsList.appendChild(li);
+            });
+            
+            // Update score display color based on performance
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            if (testResults.totalScore >= 4) {
+                scoreDisplay.style.background = 'linear-gradient(135deg, #059669 0%, #10b981 100%)';
+            } else if (testResults.totalScore >= 3) {
+                scoreDisplay.style.background = 'linear-gradient(135deg, #d97706 0%, #f59e0b 100%)';
+            } else {
+                scoreDisplay.style.background = 'linear-gradient(135deg, #dc2626 0%, #ef4444 100%)';
+            }
+        }
+
+        function restartTest() {
+            document.getElementById('resultsScreen').style.display = 'none';
+            document.getElementById('startScreen').style.display = 'block';
+            
+            // Reset variables
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            testResults = {};
+        }
+
+        // Initialize back button when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded, initializing back button...');
+            
+            // Error handling for back button
+            const backButton = document.getElementById('back');
+            if (backButton) {
+                console.log('Back button found, adding event listener...');
+                backButton.addEventListener('click', () => {
+                    console.log('Back button clicked, navigating to dashboard...');
+                    try {
+                        window.location.href = 'candidate_dashboard.html';
+                    } catch (error) {
+                        console.error('Navigation error:', error);
+                        // Fallback navigation
+                        window.location.replace('candidate_dashboard.html');
+                    }
+                });
+                console.log('Back button event listener added successfully');
+            } else {
+                console.error('Back button not found in DOM');
+            }
+        });
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' && event.ctrlKey) {
+                const nextBtn = document.getElementById('nextBtn');
+                if (nextBtn.style.display !== 'none') {
+                    nextBtn.click();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

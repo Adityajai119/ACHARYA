@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MockTest Pro - Advanced Practice Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Welcome Screen */
+        .welcome-screen {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+        }
+
+        .logo {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(255,255,255,0.5);
+            background: linear-gradient(45deg, #fff, #f0f8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(255,255,255,0.3)); }
+            to { filter: drop-shadow(0 0 30px rgba(255,255,255,0.6)); }
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 50px;
+            opacity: 0.95;
+        }
+
+        .test-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .info-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 35px;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.4s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            background: rgba(255,255,255,0.15);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .info-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            font-size: 1.4rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.4);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-top: 40px;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 60px rgba(255, 107, 107, 0.6);
+        }
+
+        /* Exam Interface */
+        .exam-container {
+            display: none;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 30px 100px rgba(0,0,0,0.2);
+            overflow: hidden;
+            animation: slideUp 0.8s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .exam-header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            width: 350px;
+            height: 10px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4ecdc4, #44a08d);
+            width: 0%;
+            transition: width 0.6s ease;
+            border-radius: 5px;
+        }
+
+        .timer {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: rgba(255,255,255,0.1);
+            padding: 20px 30px;
+            border-radius: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .timer.warning {
+            background: rgba(255, 193, 7, 0.2);
+            border-color: #ffc107;
+            animation: pulse 1s infinite;
+        }
+
+        .timer.danger {
+            background: rgba(220, 53, 69, 0.2);
+            border-color: #dc3545;
+            animation: fastPulse 0.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes fastPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .question-container {
+            padding: 50px;
+            min-height: 600px;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 3px solid #f1f3f4;
+        }
+
+        .question-number {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .question-type {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            color: #1976d2;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        /* MCQ Options */
+        .options-container {
+            display: grid;
+            gap: 20px;
+        }
+
+        .option {
+            background: #f8f9fa;
+            border: 3px solid transparent;
+            padding: 25px 30px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s;
+        }
+
+        .option:hover::before {
+            left: 100%;
+        }
+
+        .option:hover {
+            background: #e9ecef;
+            transform: translateX(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .option.selected {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: #5a67d8;
+            transform: translateX(20px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .option-letter {
+            background: #dee2e6;
+            color: #495057;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-right: 20px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .option.selected .option-letter {
+            background: rgba(255,255,255,0.3);
+            color: white;
+        }
+
+        .option-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        /* Coding Section */
+        .coding-container {
+            display: none;
+        }
+
+        .language-selector {
+            margin-bottom: 30px;
+        }
+        
+        .language-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .lang-tab {
+            padding: 15px 25px;
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .lang-tab:hover {
+            background: #e9ecef;
+            transform: translateY(-3px);
+        }
+
+        .lang-tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: #5a67d8;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .code-editor {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 30px;
+            border-radius: 20px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            min-height: 400px;
+            border: none;
+            resize: vertical;
+            font-size: 15px;
+            line-height: 1.6;
+            width: 100%;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        .code-editor:focus {
+            outline: 4px solid rgba(102, 126, 234, 0.4);
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            padding: 30px 50px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .prev-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .submit-btn {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            font-size: 1.3rem;
+            padding: 18px 40px;
+            animation: pulse 2s infinite;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Results Screen */
+        .results-screen {
+            display: none;
+            text-align: center;
+            padding: 50px;
+            color: white;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .results-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 50px;
+            margin: 40px 0;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin: 0 auto 40px;
+            position: relative;
+            background: conic-gradient(#4ecdc4 0deg, #44a08d 270deg, #e9ecef 270deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .score-inner {
+            width: 160px;
+            height: 160px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .score-text {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .result-item {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .result-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .result-label {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .restart-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 30px;
+            font-weight: 600;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container { padding: 10px; }
+            .logo { font-size: 2.5rem; }
+            .question-container { padding: 25px; }
+            .exam-header { flex-direction: column; gap: 20px; }
+            .nav-buttons { flex-direction: column; gap: 15px; }
+            .progress-bar { width: 250px; }
+            .timer { font-size: 2rem; padding: 15px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Screen -->
+        <div class="welcome-screen" id="welcomeScreen">
+            <div class="logo">MockTest Pro</div>
+            <div class="subtitle">Advanced Practice Platform for Competitive Exams</div>
+            
+            <div class="test-info-grid">
+                <div class="info-card">
+                    <div class="info-icon">🎲</div>
+                    <h3>Randomized Questions</h3>
+                    <p>12 Random Aptitude Questions from a pool of 30+ questions covering all topics</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">💻</div>
+                    <h3>Coding Challenges</h3>
+                    <p>3 Random Programming Problems from 8+ challenges with multi-language support</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">⏱</div>
+                    <h3>Duration</h3>
+                    <p>45 Minutes total time with auto-submit when timer ends</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">📊</div>
+                    <h3>Fresh Experience</h3>
+                    <p>Every test is unique with shuffled questions and randomized MCQ options</p>
+                </div>
+            </div>
+            
+            <button class="start-btn" onclick="startExam()">🚀 Start Mock Test</button>
+        </div>
+
+        <!-- Exam Interface -->
+        <div class="exam-container" id="examContainer">
+            <div class="exam-header">
+                <div class="header-left">
+                    <h2>MockTest Pro</h2>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+                <div class="timer" id="timer">45:00</div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-header">
+                    <div class="question-number" id="questionNumber">Question 1 of 15</div>
+                    <div class="question-type" id="questionType">Aptitude - Quantitative</div>
+                </div>
+
+                <div class="question-text" id="questionText">Loading question...</div>
+
+                <!-- MCQ Options -->
+                <div id="mcqOptions" class="options-container"></div>
+
+                <!-- Coding Container -->
+                <div id="codingContainer" class="coding-container">
+                    <div class="language-selector">
+                        <div class="language-tabs" id="languageTabs">
+                            <div class="lang-tab active" data-lang="python">Python</div>
+                            <div class="lang-tab" data-lang="java">Java</div>
+                            <div class="lang-tab" data-lang="javascript">JavaScript</div>
+                        </div>
+                    </div>
+                    <textarea class="code-editor" id="codeEditor" placeholder="Write your code here..."></textarea>
+                </div>
+                    </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn prev-btn" id="prevBtn" onclick="prevQuestion()" disabled>← Previous</button>
+                <div id="questionStatus"></div>
+                <button class="nav-btn next-btn" id="nextBtn" onclick="nextQuestion()">Next →</button>
+                <button class="nav-btn submit-btn" id="submitBtn" onclick="submitExam()" style="display:none">🎯 Submit Test</button>
+            </div>
+                    </div>
+
+        <!-- Results Screen -->
+        <div class="results-screen" id="resultsScreen">
+            <h1>🎉 Test Completed!</h1>
+            <div class="results-card">
+                <div class="score-circle">
+                    <div class="score-inner">
+                        <div class="score-text" id="totalScore">0%</div>
+            </div>
+        </div>
+
+                <div class="results-grid">
+                    <div class="result-item">
+                        <div class="result-value" id="aptitudeScore">0/12</div>
+                        <div class="result-label">Aptitude Questions</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-value" id="codingScore">0/3</div>
+                        <div class="result-label">Coding Questions</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-value" id="totalTime">0 min</div>
+                        <div class="result-label">Time Taken</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-value" id="accuracy">0%</div>
+                        <div class="result-label">Overall Accuracy</div>
+                    </div>
+                </div>
+                
+                <button class="restart-btn" onclick="restartExam()">🔄 Take Another Test</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="candidate_mock_tests.js"></script>
+</body>
+</html>

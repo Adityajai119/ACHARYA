@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Analyzer - ACHARYA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="candidate_resume.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI-Powered Resume Analyzer</h1>
+            <button id="back" class="back-btn">← Back to Dashboard</button>
+        </header>
+
+        <div class="content-wrapper">
+            <div class="form-section">
+                <div class="form-card">
+                    <h2>📄 Resume Analysis</h2>
+                    <p class="form-description">Upload your resume and job description to get AI-powered insights and recommendations.</p>
+                    
+                    <form id="analyzerForm" autocomplete="off">
+                        <div class="form-group">
+                            <label for="jobRole">🎯 Job Role You're Applying For</label>
+                            <input type="text" id="jobRole" placeholder="e.g., Senior Python Developer" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="jobDescription">📋 Job Description</label>
+                            <textarea id="jobDescription" rows="6" placeholder="Paste the full job description here..." required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="resumeFile" class="file-upload-label">
+                                📎 Upload Your Resume (PDF only)
+                                <span class="upload-hint">Click to browse files</span>
+                            </label>
+                            <input type="file" id="resumeFile" accept=".pdf" required>
+                            <div id="fileName" class="file-name"></div>
+                        </div>
+
+                        <button type="submit" class="submit-btn">
+                            <span class="btn-text">🚀 Analyze Resume</span>
+                            <div class="loading-spinner" style="display: none;"></div>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="results-section" id="analysisContainer" style="display:none;">
+                <div class="results-card">
+                    <div id="loader" class="loader" style="display:none;">
+                        <div class="spinner"></div>
+                        <p>🤖 AI is analyzing your resume...</p>
+                    </div>
+                    <div id="analysisResult" class="analysis-result"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="candidate_resume.js"></script>
+</body>
+</html>

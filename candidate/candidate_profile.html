@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Management - ACHARYA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="candidate_profile.css?v=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+    <script>
+        // Fallback if JWT library fails to load
+        if (typeof jwtDecode === 'undefined' && typeof jwt_decode === 'undefined') {
+            console.log('JWT library not loaded from CDN, will use fallback decoder');
+        }
+    </script>
+    <style>
+        /* Fallback styles in case external CSS fails to load */
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            text-align: center;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        #back {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(239, 68, 68, 0.8);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 30px auto 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .profile-card, .update-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 15px;
+        }
+        
+        .label {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+        }
+        
+        .value {
+            font-family: 'Inter', sans-serif;
+            color: #ffffff;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .form-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+        
+        label {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Profile Management</h1>
+    <button id="back">← Back to Dashboard</button>
+    
+    <div class="content-wrapper">
+        <div class="profile-section">
+            <div class="profile-card">
+                <h2>📋 Current Profile</h2>
+                <div class="profile-info">
+                    <div class="info-item">
+                        <span class="label">👤 Username</span>
+                        <span class="value" id="username">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">🛠️ Skills</span>
+                        <span class="value" id="skills">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">💼 Experience</span>
+                        <span class="value" id="experience">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">🎓 Education</span>
+                        <span class="value" id="education">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">🚀 Projects</span>
+                        <span class="value" id="projects">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="update-section">
+            <div class="update-card">
+                <h2>✏️ Update Profile</h2>
+                <p class="form-description">Keep your profile up to date to improve your job matching and application success.</p>
+                
+                <form id="updateProfileForm">
+                    <div class="form-group">
+                        <label for="updateSkills">🛠️ Skills</label>
+                        <input type="text" id="updateSkills" placeholder="e.g., JavaScript, Python, React, Node.js">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="updateExperience">💼 Experience</label>
+                        <input type="text" id="updateExperience" placeholder="e.g., 4 years in web development">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="updateEducation">🎓 Education</label>
+                        <input type="text" id="updateEducation" placeholder="e.g., M.Tech in Computer Science">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="updateProjects">🚀 Projects</label>
+                        <input type="text" id="updateProjects" placeholder="e.g., E-commerce Website, Mobile App">
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">💾 Update Profile</span>
+                        <div class="loading-spinner" style="display: none;"></div>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="candidate_profile.js?v=1.0.1"></script>
+</body>
+</html>
