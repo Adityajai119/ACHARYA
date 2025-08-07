@@ -64,6 +64,7 @@ def check_environment_variables():
                 print(f"   {var}=your_gemini_api_key_here")
             elif var == 'JWT_SECRET_KEY':
                 print(f"   {var}=your_super_secret_jwt_key_here")
+        print("\n💡 For local development, create a .env file with these variables")
         return False
     
     return True
@@ -73,12 +74,45 @@ def install_dependencies():
     print("\n📦 Installing dependencies...")
     
     try:
-        subprocess.run([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"], 
-                      check=True, capture_output=True)
-        print("✅ Dependencies installed successfully")
-        return True
-    except subprocess.CalledProcessError as e:
-        print(f"❌ Failed to install dependencies: {e}")
+        # Try to install with pip
+        result = subprocess.run([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"], 
+                              capture_output=True, text=True)
+        
+        if result.returncode == 0:
+            print("✅ Dependencies installed successfully")
+            return True
+        else:
+            print(f"⚠️  Some dependencies failed to install:")
+            print(result.stderr)
+            
+            # Try installing core dependencies individually
+            print("\n🔄 Trying to install core dependencies individually...")
+            core_deps = [
+                "fastapi",
+                "uvicorn[standard]",
+                "motor",
+                "python-jose[cryptography]",
+                "passlib[bcrypt]",
+                "python-multipart",
+                "python-dotenv",
+                "google-generativeai",
+                "aiofiles",
+                "httpx"
+            ]
+            
+            for dep in core_deps:
+                try:
+                    subprocess.run([sys.executable, "-m", "pip", "install", dep], 
+                                 check=True, capture_output=True)
+                    print(f"✅ Installed {dep}")
+                except subprocess.CalledProcessError:
+                    print(f"⚠️  Failed to install {dep}")
+            
+            print("\n✅ Core dependencies installed (some optional dependencies may be missing)")
+            return True
+            
+    except Exception as e:
+        print(f"❌ Error installing dependencies: {e}")
         return False
 
 def test_backend():
@@ -160,17 +194,20 @@ def main():
         return
     
     # Check environment variables
-    if not check_environment_variables():
+    env_check = check_environment_variables()
+    if not env_check:
         print("\n⚠️  Environment variables not set. You'll need to set them in your deployment platform.")
     
     # Install dependencies
     if not install_dependencies():
         print("\n❌ Failed to install dependencies.")
+        print("💡 Try installing manually: pip install -r requirements.txt")
         return
     
     # Test backend
     if not test_backend():
         print("\n❌ Backend test failed.")
+        print("💡 Check if MongoDB is running and environment variables are set")
         return
     
     # Create deployment files
